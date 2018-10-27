@@ -42,7 +42,7 @@ public class RemoteEndpointUtil {
 
         return null;
     }
-
+    @SuppressWarnings("ConstantConditions")
     static String fetchPlainText(URL url) throws IOException {
         OkHttpClient client = new OkHttpClient();
 

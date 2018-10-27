@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-
+<!-- <selector> XML file should be in either "animator" or "drawable" so moved XML file from "anim-v21" to here-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_enabled="true"
