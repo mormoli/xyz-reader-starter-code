@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -64,6 +65,7 @@ public class ArticleDetailFragment extends Fragment implements
     //TypeFace to attach text views
     private Typeface rosario;
 
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -99,7 +101,7 @@ public class ArticleDetailFragment extends Fragment implements
         // fragments because their mIndex is -1 (haven't been added to the activity yet). Thus,
         // we do this in onActivityCreated.
         //deprecated
-        getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -117,7 +119,7 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        bindViews();
+        //bindViews();
         return mRootView;
     }
 
@@ -192,27 +194,21 @@ public class ArticleDetailFragment extends Fragment implements
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
+            final TextView toolbarTitle = mRootView.findViewById(R.id.toolbar_title);
+            toolbarTitle.setText(titleView.getText());
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-            final CollapsingToolbarLayout collapsingToolbarLayout = mRootView.findViewById(R.id.coll_toolbar_layout);
-            //@see 'https://stackoverflow.com/questions/31662416/show-collapsingtoolbarlayout-title-only-when-collapsed'
             AppBarLayout appBarLayout = mRootView.findViewById(R.id.app_bar_layout);
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                //String title = titleView.getText().toString();
-                //String author = bylineView.getText().toString();
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                    Log.d(ArticleDetailActivity.class.getSimpleName(), "Listener called.");
                     if(Math.abs(i) - appBarLayout.getTotalScrollRange() == 0){
-                        collapsingToolbarLayout.setTitle(titleView.getText());
-                        //titleView.setText(" ");
-                        //bylineView.setText(" ");
+                        toolbarTitle.setVisibility(View.VISIBLE);
                     } else {
-                        collapsingToolbarLayout.setTitle(" ");
-                        //titleView.setText(title);
-                        //bylineView.setText(author);
+                        toolbarTitle.setVisibility(View.GONE);
                     }
                 }
             });
-            //collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             String photoURL = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
             Picasso.get().load(photoURL).into(mPhotoView);
         } else {

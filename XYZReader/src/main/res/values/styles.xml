@@ -23,5 +23,12 @@
         <item name="colorAccent">@color/theme_accent</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+    
+    <style name="FabStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/fab_margin</item>
+        <item name="android:src">@drawable/ic_share</item>
+    </style>
 
 </resources>

@@ -16,26 +16,21 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/coll_toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/card_image_details_height"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
             app:contentScrim="@color/theme_primary"
+            app:titleEnabled="false"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/photo"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/card_image_details_height"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/content_description"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shrine_toolbar_collapsed_height"
-                android:elevation="@dimen/toolbar_elevation"
-                app:contentInsetStart="@dimen/shrine_toolbar_collapsed_left_margin"
-                app:layout_collapseMode="pin" />
 
             <LinearLayout
                 android:id="@+id/meta_bar"
@@ -71,6 +66,25 @@
                     tools:text="By LINE"/>
             </LinearLayout>
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="@dimen/toolbar_elevation"
+                android:layout_gravity="bottom"
+                app:layout_collapseMode="pin">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/title_toolbar_collapsed_left_margin"
+                    android:layout_marginTop="@dimen/title_toolbar_collapsed_top_margin"
+                    android:visibility="gone"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+            </android.support.v7.widget.Toolbar>
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -96,12 +110,10 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        app:srcCompat="@drawable/ic_share"
+        android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/fab_elevation"
-        android:layout_gravity="end|bottom"/>
+        app:pressedTranslationZ="@dimen/fab_press_translation_z"
+        android:layout_gravity="bottom|end"
+        style="@style/FabStyle"/>
 
 </android.support.design.widget.CoordinatorLayout>

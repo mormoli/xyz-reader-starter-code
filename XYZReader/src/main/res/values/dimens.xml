@@ -3,10 +3,10 @@
     <dimen name="detail_title_text_size">32sp</dimen>
     <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
-
+    <!-- floating action button -->
     <dimen name="fab_elevation">6dp</dimen>
     <dimen name="fab_press_translation_z">12dp</dimen>
-    <dimen name="fab_margin">24dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="toolbar_elevation">4dp</dimen>
     <!-- https://material.io/design/components/cards.html#specs -->
@@ -14,9 +14,10 @@
     <dimen name="card_image_details_height">320dp</dimen>
     <dimen name="mtrl_card_spacing_size">4dp</dimen>
     <!-- https://material.io/develop/android/components/collapsing-toolbar-layout/ -->
-    <dimen name="tall_toolbar_height">300dp</dimen>
-    <dimen name="shrine_toolbar_collapsed_height">72dp</dimen>
-    <dimen name="shrine_toolbar_collapsed_left_margin">48dp</dimen>
+    <dimen name="extended_top_app_bar_height">128dp</dimen>
+    <dimen name="shrine_toolbar_collapsed_height">64dp</dimen>
+    <dimen name="title_toolbar_collapsed_left_margin">72dp</dimen>
+    <dimen name="title_toolbar_collapsed_top_margin">16dp</dimen>
     <dimen name="shrine_toolbar_offset_start">124dp</dimen>
     <dimen name="shrine_toolbar_offset_top">124dp</dimen>
 
