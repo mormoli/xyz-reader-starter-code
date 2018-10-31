@@ -6,23 +6,27 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.app.ShareCompat;
 import android.text.Html;
+import android.text.PrecomputedText;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -31,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -52,7 +55,6 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
-    //private int mMutedColor = 0xFF333333;
 
     private String template = "yyyy-MM-dd'T'HH:mm:ss.sss";
     //@see "https://stackoverflow.com/questions/14389349/android-get-current-locale-not-default"
@@ -65,7 +67,7 @@ public class ArticleDetailFragment extends Fragment implements
     //TypeFace to attach text views
     private Typeface rosario;
 
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    //private CollapsingToolbarLayout mCollapsingToolbarLayout;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -132,7 +134,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
-    static float progress(float v, float min, float max) {
+    /*static float progress(float v, float min, float max) {
         return constrain((v - min) / (max - min), 0, 1);
     }
 
@@ -144,7 +146,7 @@ public class ArticleDetailFragment extends Fragment implements
         } else {
             return val;
         }
-    }
+    }*/
 
     private Date parsePublishedDate() {
         try {
@@ -195,13 +197,19 @@ public class ArticleDetailFragment extends Fragment implements
 
             }
             final TextView toolbarTitle = mRootView.findViewById(R.id.toolbar_title);
+            //Setting title for toolbar
             toolbarTitle.setText(titleView.getText());
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            if(Build.VERSION.SDK_INT == Build.VERSION_CODES.P){
+                String longString = Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")).toString();
+                asyncSetText(bodyView, longString, Objects.requireNonNull(getActivity()).getMainExecutor());
+            } else {
+                bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            }
             AppBarLayout appBarLayout = mRootView.findViewById(R.id.app_bar_layout);
+
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                    Log.d(ArticleDetailActivity.class.getSimpleName(), "Listener called.");
                     if(Math.abs(i) - appBarLayout.getTotalScrollRange() == 0){
                         toolbarTitle.setVisibility(View.VISIBLE);
                     } else {
@@ -217,6 +225,22 @@ public class ArticleDetailFragment extends Fragment implements
             bylineView.setText("N/A" );
             bodyView.setText("N/A");
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    static void asyncSetText(final TextView textView, final String longString, Executor bgExecutor){
+        // construct precompute related parameters using the TextView that we will set the text on.
+        final PrecomputedText.Params params = textView.getTextMetricsParams();
+        final Reference textViewRef = new WeakReference<>(textView);
+        bgExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Object text = textViewRef.get();
+                if(text == null) return;
+                final PrecomputedText precomputedText = PrecomputedText.create(longString, params);
+                textView.setText(precomputedText);
+            }
+        });
     }
 
     @NonNull
