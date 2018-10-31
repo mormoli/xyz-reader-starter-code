@@ -199,7 +199,7 @@ public class ArticleDetailFragment extends Fragment implements
             final TextView toolbarTitle = mRootView.findViewById(R.id.toolbar_title);
             //Setting title for toolbar
             toolbarTitle.setText(titleView.getText());
-            if(Build.VERSION.SDK_INT == Build.VERSION_CODES.P){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
                 String longString = Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")).toString();
                 asyncSetText(bodyView, longString, Objects.requireNonNull(getActivity()).getMainExecutor());
             } else {
@@ -235,10 +235,17 @@ public class ArticleDetailFragment extends Fragment implements
         bgExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                Object text = textViewRef.get();
+                TextView text = (TextView) textViewRef.get();
                 if(text == null) return;
                 final PrecomputedText precomputedText = PrecomputedText.create(longString, params);
-                textView.setText(precomputedText);
+                textView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView textView1 = (TextView) textViewRef.get();
+                        if(textView1 == null) return;
+                        textView.setText(precomputedText);
+                    }
+                });
             }
         });
     }
