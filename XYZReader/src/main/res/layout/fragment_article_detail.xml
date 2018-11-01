@@ -17,15 +17,15 @@
             android:id="@+id/coll_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/card_image_details_height"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="@dimen/coll_toolbar_margin_start"
+            app:expandedTitleMarginEnd="@dimen/coll_toolbar_margin_end"
             app:contentScrim="@color/theme_primary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/photo"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/detail_photo_height"
                 android:contentDescription="@string/content_description"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
@@ -70,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
+                app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
                 app:layout_collapseMode="pin">
 
                 <TextView
@@ -78,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/title_toolbar_collapsed_left_margin"
                     android:layout_marginTop="@dimen/title_toolbar_collapsed_top_margin"
+                    android:textColor="@android:color/white"
                     android:visibility="gone"
                     style="@style/TextAppearance.MaterialComponents.Headline6"/>
 

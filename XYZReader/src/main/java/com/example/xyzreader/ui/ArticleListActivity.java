@@ -11,8 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -20,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -54,7 +51,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private static final String TAG = ArticleListActivity.class.toString();
 
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    //private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
@@ -138,11 +135,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         Adapter adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
-        int columnCount = Utility.calculateNoOfColumns(this);//getResources().getInteger(R.integer.list_column_count);
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
     }
+    /*
     //@see 'https://stackoverflow.com/questions/33575731/gridlayoutmanager-how-to-auto-fit-columns'
     public static class Utility {
         public static int calculateNoOfColumns(Context context) {
@@ -150,7 +148,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
             return (int) (dpWidth/180);
         }
-    }
+    }*/
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {

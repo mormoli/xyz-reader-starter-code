@@ -18,7 +18,10 @@
     <dimen name="shrine_toolbar_collapsed_height">64dp</dimen>
     <dimen name="title_toolbar_collapsed_left_margin">72dp</dimen>
     <dimen name="title_toolbar_collapsed_top_margin">16dp</dimen>
-    <dimen name="shrine_toolbar_offset_start">124dp</dimen>
-    <dimen name="shrine_toolbar_offset_top">124dp</dimen>
+
+    <dimen name="coll_toolbar_margin_start">48dp</dimen>
+    <dimen name="coll_toolbar_margin_end">64dp</dimen>
+
+    <dimen name="toolbar_height_with_material_theme_size">88dp</dimen>
 
 </resources>
