@@ -1,11 +1,12 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:statusBarBackground="@android:color/transparent"
     android:fitsSystemWindows="true">
+<!-- android:fitsSystemWindows="true" -->
 
+<!-- https://stackoverflow.com/questions/32428700/status-bar-turns-white-and-does-not-show-content-behind-it -->
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
@@ -13,17 +14,18 @@
 
     <FrameLayout
         android:id="@+id/up_container"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?actionBarSize">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:minHeight="?actionBarSize"
-            android:layout_height="@dimen/coll_toolbar_margin_end"
-            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light">
-
-        </android.support.v7.widget.Toolbar>
+        <ImageButton
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:id="@+id/action_up"
+            android:layout_width="56dp"
+            android:layout_height="?actionBarSize"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/up"
+            android:src="@drawable/ic_arrow_back" />
     </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>

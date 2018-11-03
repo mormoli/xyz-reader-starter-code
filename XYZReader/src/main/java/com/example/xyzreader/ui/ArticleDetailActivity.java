@@ -11,10 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,9 +36,9 @@ public class ArticleDetailActivity extends AppCompatActivity
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     //private View mUpButtonContainer;
-    //private View mUpButton;
+    private View mUpButton;
 
-    private Toolbar mToolbar;
+    //private Toolbar mToolbar;
     //private CollapsingToolbarLayout mCollapsingToolbarLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +48,22 @@ public class ArticleDetailActivity extends AppCompatActivity
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }*/
         setContentView(R.layout.activity_article_detail);
 
         getSupportLoaderManager().initLoader(0, null, this);
 
-        mToolbar = findViewById(R.id.toolbar);
+        /*mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(" ");
-        }
+        }*/
 
 
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -73,13 +75,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         //.setOnPageChangeListener is deprecated now
         //@see 'https://stackoverflow.com/questions/30867852/viewpager-setonpagechangelistener-deprecated'
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                //super.onPageScrollStateChanged(state);
-                /*mUpButton.animate()
-                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
-                        .setDuration(300);*/
-            }
 
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -94,6 +89,19 @@ public class ArticleDetailActivity extends AppCompatActivity
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
                 //updateUpButtonPosition();
             }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
+        mUpButton = findViewById(R.id.action_up);
+        mUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSupportNavigateUp();
+            }
         });
 
         if (savedInstanceState == null) {
@@ -103,20 +111,6 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
         }
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.homeAsUp:
-                finish();
-                return true;
-            case R.id.showHome:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @NonNull
@@ -133,7 +127,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         // Select the start ID
         if (mStartId > 0) {
             mCursor.moveToFirst();
-            // TODO: optimize
             while (!mCursor.isAfterLast()) {
                 if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
                     final int position = mCursor.getPosition();

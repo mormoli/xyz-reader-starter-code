@@ -31,11 +31,11 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -95,6 +95,10 @@ public class ArticleDetailFragment extends Fragment implements
         setHasOptionsMenu(true);
     }
 
+    public ArticleDetailActivity getActivityCast() {
+        return (ArticleDetailActivity) getActivity();
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -121,6 +125,19 @@ public class ArticleDetailFragment extends Fragment implements
                         .getIntent(), getString(R.string.action_share)));
             }
         });
+        //https://stackoverflow.com/questions/3407256/height-of-status-bar-in-android
+        //https://stackoverflow.com/questions/27621419/changing-from-transparent-to-colored-status-bar-android
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivityCast().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getActivityCast().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getActivityCast().getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }*/
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivityCast().getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        }*/
         //bindViews();
         return mRootView;
     }
@@ -196,25 +213,46 @@ public class ArticleDetailFragment extends Fragment implements
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
-            final TextView toolbarTitle = mRootView.findViewById(R.id.toolbar_title);
+            //final TextView toolbarTitle = mRootView.findViewById(R.id.toolbar_title);
             //Setting title for toolbar
-            toolbarTitle.setText(titleView.getText());
+            //toolbarTitle.setText(titleView.getText());
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
                 String longString = Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")).toString();
                 asyncSetText(bodyView, longString, Objects.requireNonNull(getActivity()).getMainExecutor());
             } else {
                 bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
             }
+            //setting toolbar
+            final android.support.v7.widget.Toolbar toolbar = mRootView.findViewById(R.id.toolbar);
+            getActivityCast().setSupportActionBar(toolbar);
+            /*if(getActivityCast().getSupportActionBar() != null)
+                getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getActivityCast().getSupportActionBar().setDisplayShowHomeEnabled(true);*/
+            //getActivityCast().getSupportActionBar().setTitle(titleView.getText());
+            //getActivityCast().getSupportActionBar().setDisplayShowTitleEnabled(false);
+            //collapsing toolbar layout title and initialization
+            //final CollapsingToolbarLayout collapsingToolbarLayout = mRootView.findViewById(R.id.coll_toolbar_layout);
+            //collapsingToolbarLayout.setTitle(" ");
+            final String headerTitle = titleView.getText().toString();
+            toolbar.setTitle("");
+            //@see 'https://stackoverflow.com/questions/31662416/show-collapsingtoolbarlayout-title-only-when-collapsed'
             AppBarLayout appBarLayout = mRootView.findViewById(R.id.app_bar_layout);
 
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
-                public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                    if(Math.abs(i) - appBarLayout.getTotalScrollRange() == 0){
-                        toolbarTitle.setVisibility(View.VISIBLE);
-                    } else {
-                        toolbarTitle.setVisibility(View.GONE);
-                    }
+                public void onOffsetChanged(final AppBarLayout appBarLayout, final int i) {
+                    //without runnable thread android studio gives following error :
+                    //requestLayout() improperly called by AppCompatActivity
+                    toolbar.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(Math.abs(i) - appBarLayout.getTotalScrollRange() == 0){
+                                toolbar.setTitle(headerTitle);
+                            } else {
+                                toolbar.setTitle("");
+                            }
+                        }
+                    });
                 }
             });
             String photoURL = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
@@ -224,6 +262,24 @@ public class ArticleDetailFragment extends Fragment implements
             titleView.setText("N/A");
             bylineView.setText("N/A" );
             bodyView.setText("N/A");
+        }
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.homeAsUp:
+                //finish();
+                getActivityCast().onBackPressed();
+                return true;
+            case R.id.showHome:
+                //finish();
+                getActivityCast().onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
